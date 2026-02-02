@@ -630,21 +630,32 @@
 
     function moveNoRandom() {
       const b = noBtn.getBoundingClientRect();
+      const yesRect = yesBtn.getBoundingClientRect();
 
-      // Move across entire screen
-      const maxLeft = window.innerWidth - b.width - 20;
-      const maxTop = window.innerHeight - b.height - 20;
+      // Define zones away from YES button (corners and edges)
+      const zones = [
+        // Top-left corner
+        { minX: 20, maxX: window.innerWidth * 0.25, minY: 20, maxY: window.innerHeight * 0.3 },
+        // Top-right corner
+        { minX: window.innerWidth * 0.7, maxX: window.innerWidth - b.width - 20, minY: 20, maxY: window.innerHeight * 0.3 },
+        // Bottom-left corner
+        { minX: 20, maxX: window.innerWidth * 0.25, minY: window.innerHeight * 0.7, maxY: window.innerHeight - b.height - 20 },
+        // Bottom-right corner
+        { minX: window.innerWidth * 0.7, maxX: window.innerWidth - b.width - 20, minY: window.innerHeight * 0.7, maxY: window.innerHeight - b.height - 20 },
+        // Left edge
+        { minX: 20, maxX: window.innerWidth * 0.2, minY: window.innerHeight * 0.3, maxY: window.innerHeight * 0.7 },
+        // Right edge
+        { minX: window.innerWidth * 0.75, maxX: window.innerWidth - b.width - 20, minY: window.innerHeight * 0.3, maxY: window.innerHeight * 0.7 },
+      ];
 
-      let newLeft = 20 + Math.random() * maxLeft;
-      let newTop = 20 + Math.random() * maxTop;
+      // Pick a random zone
+      const zone = zones[Math.floor(Math.random() * zones.length)];
+
+      let newLeft = zone.minX + Math.random() * (zone.maxX - zone.minX);
+      let newTop = zone.minY + Math.random() * (zone.maxY - zone.minY);
 
       noBtn.style.left = newLeft + "px";
       noBtn.style.top = newTop + "px";
-      noBtn.style.transform = "scale(0.95)";
-
-      setTimeout(() => {
-        noBtn.style.transform = "scale(1)";
-      }, 80);
 
       // Change no button text
       noMsgIndex = (noMsgIndex + 1) % noMessages.length;
@@ -654,7 +665,7 @@
     // Start auto-movement after page is ready
     function startAutoMove() {
       moveNoRandom(); // Move immediately
-      autoMoveInterval = setInterval(moveNoRandom, 200); // Move every 0.2 seconds - SUPER FAST!
+      autoMoveInterval = setInterval(moveNoRandom, 150); // Move every 0.15 seconds - CRAZY FAST!
     }
 
     // Start after a short delay to ensure layout is ready
