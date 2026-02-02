@@ -19,7 +19,7 @@
     :root {
       --bg1: #1a0a12;
       --bg2: #2d1a24;
-      --card: rgba(0, 0, 0, 0.05);
+      --card: transparent;
       --card-border: rgba(255, 255, 255, 0.1);
       --yes: linear-gradient(135deg, #ff3b7a, #ff6b9d, #ff3b7a);
       --yesHover: linear-gradient(135deg, #ff1f68, #ff4d85, #ff1f68);
@@ -59,7 +59,7 @@
     .bg-overlay {
       position: fixed;
       inset: 0;
-      background: linear-gradient(135deg, rgba(255, 61, 122, 0.01) 0%, rgba(0, 0, 0, 0.05) 100%);
+      background: transparent;
       z-index: -1;
     }
 
@@ -115,7 +115,7 @@
       width: min(720px, 92vw);
       padding: 36px 28px;
       background: var(--card);
-      backdrop-filter: blur(2px) saturate(1.05);
+      backdrop-filter: none;
       border-radius: 32px;
       text-align: center;
       box-shadow:
