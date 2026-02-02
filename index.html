@@ -37,8 +37,10 @@
       display: grid;
       place-items: center;
       font-family: 'Poppins', system-ui, sans-serif;
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
       padding: 16px;
+      padding-bottom: 40px;
       position: relative;
     }
 
@@ -338,6 +340,7 @@
     .result {
       display: none;
       margin-top: 24px;
+      padding-bottom: 30px;
       animation: pop .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
@@ -359,12 +362,13 @@
 
     .fireworks {
       width: 100%;
-      max-width: 400px;
+      max-width: 350px;
+      max-height: 250px;
       height: auto;
       margin: 0 auto;
       display: block;
-      border-radius: 20px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, .4);
+      border-radius: 16px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, .4);
       object-fit: contain;
     }
 
