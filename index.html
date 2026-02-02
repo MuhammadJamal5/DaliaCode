@@ -616,18 +616,11 @@
       }, 800);
     }
 
-    /* ---------- YES BUTTON GROWS ---------- */
-    let yesScale = 1;
-    function growYes() {
-      yesScale = Math.min(2.5, yesScale + 0.12);
-      yesBtn.style.transform = `translateY(-50%) scale(${yesScale})`;
-      yesBtn.style.boxShadow = `0 ${10 + yesScale * 5}px ${35 + yesScale * 15}px rgba(255,61,122,${0.4 + yesScale * 0.1})`;
-    }
-
     /* ---------- NO BUTTON RUNS AWAY ---------- */
     const noMessages = [
       "No 😢", "Are you sure? 🥺", "Please? 💕", "Think again! 😊",
-      "Come on! 💖", "Pretty please? 🙏", "One chance? 💝", "I'll be good! 🌹"
+      "Come on! 💖", "Pretty please? 🙏", "One chance? 💝", "I'll be good! 🌹",
+      "Why not? 😭", "Say yes! 💘", "Don't be shy! 🥰"
     ];
     let noMsgIndex = 0;
 
@@ -635,21 +628,13 @@
       return Math.max(min, Math.min(max, n));
     }
 
-    function moveNo(px, py) {
+    function moveNoRandom() {
       const z = zone.getBoundingClientRect();
       const b = noBtn.getBoundingClientRect();
 
-      let dx = (b.left + b.width / 2) - px;
-      let dy = (b.top + b.height / 2) - py;
-      let mag = Math.hypot(dx, dy) || 1;
-      dx /= mag;
-      dy /= mag;
-
-      let newLeft = (b.left - z.left) + dx * 180;
-      let newTop = (b.top - z.top) + dy * 180;
-
-      newLeft = clamp(newLeft, 0, z.width - b.width);
-      newTop = clamp(newTop, 0, z.height - b.height);
+      // Random position within the button zone
+      let newLeft = Math.random() * (z.width - b.width);
+      let newTop = Math.random() * (z.height - b.height);
 
       noBtn.style.left = newLeft + "px";
       noBtn.style.top = newTop + "px";
@@ -658,20 +643,23 @@
       // Change no button text
       noMsgIndex = (noMsgIndex + 1) % noMessages.length;
       noBtn.textContent = noMessages[noMsgIndex];
-
-      growYes();
     }
 
-    zone.addEventListener("pointermove", e => {
-      const b = noBtn.getBoundingClientRect();
-      const d = Math.hypot(
-        (b.left + b.width / 2) - e.clientX,
-        (b.top + b.height / 2) - e.clientY
-      );
-      if (d < 160) moveNo(e.clientX, e.clientY);
+    // Auto-move NO button every 2 seconds
+    setInterval(moveNoRandom, 2000);
+
+    // Also move on touch/click attempt
+    noBtn.addEventListener("pointerdown", e => {
+      e.preventDefault();
+      moveNoRandom();
     });
 
     noBtn.addEventListener("click", e => e.preventDefault());
+
+    // Move on hover too (for desktop)
+    noBtn.addEventListener("pointerenter", e => {
+      moveNoRandom();
+    });
 
     /* ---------- YES CLICK ---------- */
     let loveStartTime;
