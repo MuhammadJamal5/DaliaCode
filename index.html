@@ -19,7 +19,7 @@
     :root {
       --bg1: #1a0a12;
       --bg2: #2d1a24;
-      --card: rgba(0, 0, 0, 0.2);
+      --card: rgba(0, 0, 0, 0.1);
       --card-border: rgba(255, 255, 255, 0.1);
       --yes: linear-gradient(135deg, #ff3b7a, #ff6b9d, #ff3b7a);
       --yesHover: linear-gradient(135deg, #ff1f68, #ff4d85, #ff1f68);
@@ -59,7 +59,7 @@
     .bg-overlay {
       position: fixed;
       inset: 0;
-      background: linear-gradient(135deg, rgba(255, 61, 122, 0.05) 0%, rgba(0, 0, 0, 0.35) 100%);
+      background: linear-gradient(135deg, rgba(255, 61, 122, 0.02) 0%, rgba(0, 0, 0, 0.15) 100%);
       z-index: -1;
     }
 
@@ -115,7 +115,7 @@
       width: min(720px, 92vw);
       padding: 36px 28px;
       background: var(--card);
-      backdrop-filter: blur(8px) saturate(1.2);
+      backdrop-filter: blur(4px) saturate(1.1);
       border-radius: 32px;
       text-align: center;
       box-shadow:
@@ -629,33 +629,25 @@
     let autoMoveInterval;
 
     function moveNoRandom() {
+      const z = zone.getBoundingClientRect();
       const b = noBtn.getBoundingClientRect();
-      const yesRect = yesBtn.getBoundingClientRect();
 
-      // Define zones away from YES button (corners and edges)
-      const zones = [
-        // Top-left corner
-        { minX: 20, maxX: window.innerWidth * 0.25, minY: 20, maxY: window.innerHeight * 0.3 },
-        // Top-right corner
-        { minX: window.innerWidth * 0.7, maxX: window.innerWidth - b.width - 20, minY: 20, maxY: window.innerHeight * 0.3 },
-        // Bottom-left corner
-        { minX: 20, maxX: window.innerWidth * 0.25, minY: window.innerHeight * 0.7, maxY: window.innerHeight - b.height - 20 },
-        // Bottom-right corner
-        { minX: window.innerWidth * 0.7, maxX: window.innerWidth - b.width - 20, minY: window.innerHeight * 0.7, maxY: window.innerHeight - b.height - 20 },
-        // Left edge
-        { minX: 20, maxX: window.innerWidth * 0.2, minY: window.innerHeight * 0.3, maxY: window.innerHeight * 0.7 },
-        // Right edge
-        { minX: window.innerWidth * 0.75, maxX: window.innerWidth - b.width - 20, minY: window.innerHeight * 0.3, maxY: window.innerHeight * 0.7 },
-      ];
+      if (z.width <= 0 || z.height <= 0) return; // Zone not ready
 
-      // Pick a random zone
-      const zone = zones[Math.floor(Math.random() * zones.length)];
+      // Random position within the button zone
+      const maxLeft = Math.max(0, z.width - b.width - 10);
+      const maxTop = Math.max(0, z.height - b.height - 10);
 
-      let newLeft = zone.minX + Math.random() * (zone.maxX - zone.minX);
-      let newTop = zone.minY + Math.random() * (zone.maxY - zone.minY);
+      let newLeft = 10 + Math.random() * maxLeft;
+      let newTop = 10 + Math.random() * maxTop;
 
       noBtn.style.left = newLeft + "px";
       noBtn.style.top = newTop + "px";
+      noBtn.style.transform = "scale(0.95)";
+
+      setTimeout(() => {
+        noBtn.style.transform = "scale(1)";
+      }, 150);
 
       // Change no button text
       noMsgIndex = (noMsgIndex + 1) % noMessages.length;
@@ -665,7 +657,7 @@
     // Start auto-movement after page is ready
     function startAutoMove() {
       moveNoRandom(); // Move immediately
-      autoMoveInterval = setInterval(moveNoRandom, 150); // Move every 0.15 seconds - CRAZY FAST!
+      autoMoveInterval = setInterval(moveNoRandom, 400); // Move every 0.4 seconds - impossible to catch!
     }
 
     // Start after a short delay to ensure layout is ready
