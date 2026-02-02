@@ -620,35 +620,52 @@
     const noMessages = [
       "No 😢", "Are you sure? 🥺", "Please? 💕", "Think again! 😊",
       "Come on! 💖", "Pretty please? 🙏", "One chance? 💝", "I'll be good! 🌹",
-      "Why not? 😭", "Say yes! 💘", "Don't be shy! 🥰"
+      "Why not? 😭", "Say yes! 💘", "Don't be shy! 🥰", "Catch me! 🏃", "Too slow! 😜"
     ];
     let noMsgIndex = 0;
-
-    function clamp(n, min, max) {
-      return Math.max(min, Math.min(max, n));
-    }
+    let autoMoveInterval;
 
     function moveNoRandom() {
       const z = zone.getBoundingClientRect();
       const b = noBtn.getBoundingClientRect();
 
+      if (z.width <= 0 || z.height <= 0) return; // Zone not ready
+
       // Random position within the button zone
-      let newLeft = Math.random() * (z.width - b.width);
-      let newTop = Math.random() * (z.height - b.height);
+      const maxLeft = Math.max(0, z.width - b.width - 10);
+      const maxTop = Math.max(0, z.height - b.height - 10);
+
+      let newLeft = 10 + Math.random() * maxLeft;
+      let newTop = 10 + Math.random() * maxTop;
 
       noBtn.style.left = newLeft + "px";
       noBtn.style.top = newTop + "px";
-      noBtn.style.transform = "none";
+      noBtn.style.transform = "scale(0.95)";
+
+      setTimeout(() => {
+        noBtn.style.transform = "scale(1)";
+      }, 150);
 
       // Change no button text
       noMsgIndex = (noMsgIndex + 1) % noMessages.length;
       noBtn.textContent = noMessages[noMsgIndex];
     }
 
-    // Auto-move NO button every 2 seconds
-    setInterval(moveNoRandom, 2000);
+    // Start auto-movement after page is ready
+    function startAutoMove() {
+      moveNoRandom(); // Move immediately
+      autoMoveInterval = setInterval(moveNoRandom, 1500); // Move every 1.5 seconds
+    }
 
-    // Also move on touch/click attempt
+    // Start after a short delay to ensure layout is ready
+    setTimeout(startAutoMove, 500);
+
+    // Also move on touch/click attempt (for mobile)
+    noBtn.addEventListener("touchstart", e => {
+      e.preventDefault();
+      moveNoRandom();
+    }, { passive: false });
+
     noBtn.addEventListener("pointerdown", e => {
       e.preventDefault();
       moveNoRandom();
