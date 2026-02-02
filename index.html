@@ -654,11 +654,11 @@
     // Start auto-movement after page is ready
     function startAutoMove() {
       moveNoRandom(); // Move immediately
-      autoMoveInterval = setInterval(moveNoRandom, 1500); // Move every 1.5 seconds
+      autoMoveInterval = setInterval(moveNoRandom, 700); // Move every 0.7 seconds - super fast!
     }
 
     // Start after a short delay to ensure layout is ready
-    setTimeout(startAutoMove, 500);
+    setTimeout(startAutoMove, 300);
 
     // Also move on touch/click attempt (for mobile)
     noBtn.addEventListener("touchstart", e => {
