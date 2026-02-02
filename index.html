@@ -322,7 +322,9 @@
     }
 
     #noBtn {
-      left: 65%;
+      position: fixed;
+      top: 50%;
+      left: 70%;
       background: linear-gradient(135deg, #94a3b8, #64748b);
       color: #fff;
       font-size: 16px;
@@ -330,12 +332,13 @@
       box-shadow:
         0 8px 25px rgba(0, 0, 0, .3),
         0 0 0 2px rgba(255, 255, 255, 0.1);
-      transition: all 0.3s ease-out;
+      transition: left 0.1s ease-out, top 0.1s ease-out;
+      z-index: 1000;
     }
 
     #noBtn:hover,
     #noBtn:active {
-      transform: translateY(-50%) scale(0.9);
+      transform: scale(0.9);
       opacity: 0.8;
     }
 
@@ -626,17 +629,14 @@
     let autoMoveInterval;
 
     function moveNoRandom() {
-      const z = zone.getBoundingClientRect();
       const b = noBtn.getBoundingClientRect();
 
-      if (z.width <= 0 || z.height <= 0) return; // Zone not ready
+      // Move across entire screen
+      const maxLeft = window.innerWidth - b.width - 20;
+      const maxTop = window.innerHeight - b.height - 20;
 
-      // Random position within the button zone
-      const maxLeft = Math.max(0, z.width - b.width - 10);
-      const maxTop = Math.max(0, z.height - b.height - 10);
-
-      let newLeft = 10 + Math.random() * maxLeft;
-      let newTop = 10 + Math.random() * maxTop;
+      let newLeft = 20 + Math.random() * maxLeft;
+      let newTop = 20 + Math.random() * maxTop;
 
       noBtn.style.left = newLeft + "px";
       noBtn.style.top = newTop + "px";
@@ -644,7 +644,7 @@
 
       setTimeout(() => {
         noBtn.style.transform = "scale(1)";
-      }, 150);
+      }, 80);
 
       // Change no button text
       noMsgIndex = (noMsgIndex + 1) % noMessages.length;
@@ -654,7 +654,7 @@
     // Start auto-movement after page is ready
     function startAutoMove() {
       moveNoRandom(); // Move immediately
-      autoMoveInterval = setInterval(moveNoRandom, 400); // Move every 0.4 seconds - impossible to catch!
+      autoMoveInterval = setInterval(moveNoRandom, 200); // Move every 0.2 seconds - SUPER FAST!
     }
 
     // Start after a short delay to ensure layout is ready
