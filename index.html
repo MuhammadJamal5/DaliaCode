@@ -629,24 +629,27 @@
     let autoMoveInterval;
 
     function moveNoRandom() {
-      const z = zone.getBoundingClientRect();
       const b = noBtn.getBoundingClientRect();
 
-      if (z.width <= 0 || z.height <= 0) return; // Zone not ready
+      // Get viewport dimensions
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
 
-      // Random position within the button zone
-      const maxLeft = Math.max(0, z.width - b.width - 10);
-      const maxTop = Math.max(0, z.height - b.height - 10);
+      // Calculate safe bounds (keep button fully visible)
+      const padding = 20;
+      const maxLeft = viewportWidth - b.width - padding;
+      const maxTop = viewportHeight - b.height - padding;
 
-      let newLeft = 10 + Math.random() * maxLeft;
-      let newTop = 10 + Math.random() * maxTop;
+      // Random position within the entire viewport
+      let newLeft = padding + Math.random() * (maxLeft - padding);
+      let newTop = padding + Math.random() * (maxTop - padding);
 
       noBtn.style.left = newLeft + "px";
       noBtn.style.top = newTop + "px";
-      noBtn.style.transform = "scale(0.95)";
+      noBtn.style.transform = "translateY(-50%) scale(0.95)";
 
       setTimeout(() => {
-        noBtn.style.transform = "scale(1)";
+        noBtn.style.transform = "translateY(-50%) scale(1)";
       }, 150);
 
       // Change no button text
